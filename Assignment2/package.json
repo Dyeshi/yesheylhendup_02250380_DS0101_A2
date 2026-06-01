@@ -1,0 +1,18 @@
+{
+  "name": "assignment2",
+  "version": "1.0.0",
+  "description": "DSO Assignment 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --ci --reporters=default --reporters=jest-junit",
+    "build": "echo Build Successful"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "jest": "^30.0.0",
+    "jest-junit": "^16.0.0"
+  }
+}
