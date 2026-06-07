@@ -22,5 +22,5 @@ services:
     env: docker
     dockerfilePath: ./frontend/Dockerfile
     envVars:
-      - key: REACT_APP_API_URL
+      - key: VITE_API_URL
         value: https://be-todo.onrender.com
