@@ -1,0 +1,133 @@
+practical report 
+
+Assignment III – CI/CD with GitHub Actions (DSO101)
+📌 Project Overview
+This assignment focuses on implementing a CI/CD pipeline using GitHub Actions to automate the build, test, and deployment process of a containerized Node.js Todo application (from Assignment I).
+
+The expected workflow included:
+Building a Docker image
+Pushing the image to Docker Hub
+Deploying the container to Render.com using deployment webhook
+🛠️ Tools & Technologies
+GitHub (Source Code Management)
+GitHub Actions (CI/CD Automation)
+Docker (Containerization)
+Docker Hub (Image Registry)
+Render.com (Cloud Deployment Platform)
+Node.js & npm (Application runtime)
+Jest (Testing framework)
+Project Setup
+
+The repository was structured as follows:
+
+todo-app/
+│── frontend/
+│── backend/
+│── Dockerfile
+│── docker-compose.yml
+│── .github/
+│   └── workflows/
+│       └── deploy.yml
+│── render.yaml
+│── README.md
+🐳 Docker Setup
+
+Dockerfiles were created to containerize the application.
+
+Example Dockerfile:
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm test
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
+
+The application was tested locally using Docker to ensure it could build and run successfully.
+
+GitHub Actions Workflow (CI/CD Pipeline)
+A GitHub Actions workflow file was created at:
+.github/workflows/deploy.yml
+
+Intended Workflow Steps:
+Checkout repository
+Login to Docker Hub
+Build Docker image
+Push image to Docker Hub
+Trigger Render deployment via webhook
+
+
+Workflow File (Structure):
+name: CI/CD Pipeline
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/todo-app:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/todo-app:latest
+
+
+Implementation Status
+The GitHub Actions pipeline was not successfully executed.
+The following issues were observed:
+
+GitHub Actions workflow did not trigger successfully on push
+No successful CI/CD run appeared in the Actions tab
+Docker image was not automatically built via GitHub Actions
+Docker Hub push was not completed through automation
+Render deployment webhook was not triggered
+
+As a result, the CI/CD pipeline remained configured but not functional in execution.
+
+Challenges Faced
+Several challenges prevented full completion:
+Difficulty triggering GitHub Actions workflow runs
+Issues with GitHub repository configuration and workflow detection
+Secret configuration (Docker Hub credentials and tokens)
+Lack of successful integration between GitHub Actions and Docker Hub
+Render webhook automation not fully tested
+
+Learning Outcomes
+Even though the workflow did not execute successfully, the assignment helped in understanding:
+
+Structure of GitHub Actions workflows
+CI/CD automation pipeline design
+Docker image build and push process
+Integration between GitHub, Docker Hub, and Render
+Importance of secrets management in DevOps pipelines
+
+Conclusion
+The CI/CD pipeline using GitHub Actions was fully designed and implemented in code but not successfully executed in a live environment.
+
+However, this assignment demonstrates understanding of:
+CI/CD workflow architecture
+GitHub Actions configuration
+Docker-based deployment pipeline design
+Real-world challenges in automation and DevOps integration
+
+Repository Link
+https://github.com/Dyeshi/yesheylhendup_02250380_DS0101_A2/tree/main/Assignment3

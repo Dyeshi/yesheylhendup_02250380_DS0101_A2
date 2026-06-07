@@ -1,0 +1,118 @@
+Assignment IV – CI/CD Deployment using GitHub & Render (DSO101)
+Deploy Your First Web Application using GitHub, GitHub Actions, and Render
+
+Objective
+The objective of this assignment was to understand the basics of:
+-Git and GitHub version control system
+-Continuous Integration and Continuous Deployment (CI/CD) using GitHub Actions
+-Deployment of a web application using Render.com
+The task focused on building a simple web application and automating its deployment pipeline.
+
+Tools & Technologies Used
+Git & GitHub (Source control management)
+GitHub Actions (CI/CD automation)
+Render.com (Cloud deployment platform)
+Flask (Python web framework) / or Static HTML (based on implementation)
+
+Project Description
+A simple web application was developed and deployed successfully. The application follows a minimal structure and demonstrates a working CI/CD pipeline.
+Option Chosen:
+ Flask Web Application (Python-based)
+
+Application Code
+A basic Flask application was created as follows:
+( from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello DevOps!"
+
+if __name__ == '__main__':
+    app.run()               )
+
+GitHub Repository Setup
+The project was initialized and pushed to GitHub using the following commands:
+git init
+git add .
+git commit -m "Initial commit - CI/CD Assignment IV"
+git branch -M main
+git remote add origin <repo-url>
+git push -u origin main
+
+The repository contains:
+
+Flask application code
+GitHub Actions workflow file
+Requirements file (if Flask used)
+README documentation
+
+GitHub Actions Workflow (CI/CD Pipeline)
+A GitHub Actions workflow was created inside:
+
+.github/workflows/deploy.yml
+Workflow Configuration:
+name: Deploy to Render
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Dummy step
+        run: echo "Code pushed successfully!"
+
+
+Deployment on Render
+The application was deployed using Render.com:
+
+Steps followed:
+Connected GitHub repository to Render
+Selected Web Service
+Configured build/start settings
+Enabled automatic deployment from GitHub
+
+Deployment Outcome:
+Application successfully deployed on Render
+Live URL accessible via browser
+Automatic redeployment triggered on GitHub push
+
+CI/CD Workflow Summary
+The implemented CI/CD pipeline works as follows:
+Code is pushed to GitHub repository
+GitHub Actions workflow is triggered automatically
+Basic workflow steps execute successfully
+Render detects repository changes
+Application is deployed automatically
+
+Challenges Faced
+During the implementation, the following challenges were encountered:
+Initial setup of GitHub repository and workflow structure
+Understanding GitHub Actions workflow syntax
+Connecting GitHub repository to Render correctly
+Configuring deployment settings on Render
+These issues were resolved through testing and iterative configuration.
+
+Learning Outcomes
+This assignment helped in understanding:
+Basic Git and GitHub workflow
+CI/CD pipeline automation using GitHub Actions
+Cloud deployment using Render
+Integration between version control and deployment platforms
+End-to-end software deployment lifecycle
+
+Conclusion
+The assignment successfully demonstrates a basic CI/CD pipeline using GitHub Actions and Render. A simple Flask web application was created, pushed to GitHub, and deployed successfully.
+
+This exercise provided practical exposure to modern DevOps workflows and automated deployment systems.
+
+Repository Link
+https://github.com/Dyeshi/yesheylhendup_02250380_DS0101_A2/tree/main/Assignment4
