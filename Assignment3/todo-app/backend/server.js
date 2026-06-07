@@ -1,81 +1,159 @@
 const express = require("express");
 const cors = require("cors");
-const { Pool } = require("pg");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-  ssl: {
-    rejectUnauthorized: false   // ✅ Required for Render Postgres
+/* =========================
+   SAFE MODE (NO CRASH DB)
+========================= */
+
+let pool = null;
+
+if (
+  process.env.DB_HOST &&
+  process.env.DB_USER &&
+  process.env.DB_PASSWORD &&
+  process.env.DB_NAME &&
+  process.env.DB_PORT
+) {
+  try {
+    const { Pool } = require("pg");
+
+    pool = new Pool({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: String(process.env.DB_PASSWORD),
+      database: process.env.DB_NAME,
+      port: Number(process.env.DB_PORT),
+      ssl:
+        process.env.NODE_ENV === "production"
+          ? { rejectUnauthorized: false }
+          : false,
+    });
+
+    console.log("✅ PostgreSQL config loaded");
+  } catch (err) {
+    console.log("⚠️ DB not available, switching to memory mode");
   }
+}
+
+/* =========================
+   MEMORY STORAGE (FALLBACK)
+========================= */
+
+let tasks = [];
+let id = 1;
+
+/* =========================
+   HEALTH CHECK
+========================= */
+
+app.get("/health", (req, res) => {
+  res.json({
+    status: "OK",
+    db: pool ? "connected mode" : "memory mode",
+  });
 });
 
-// Ensure table exists
-pool.query(`CREATE TABLE IF NOT EXISTS tasks (
-  id SERIAL PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  completed BOOLEAN DEFAULT false
-)`);
+/* =========================
+   GET TASKS
+========================= */
 
 app.get("/tasks", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM tasks");
-    res.json(result.rows);
+    if (pool) {
+      const result = await pool.query("SELECT * FROM tasks ORDER BY id ASC");
+      return res.json(result.rows);
+    }
+
+    res.json(tasks);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+/* =========================
+   CREATE TASK
+========================= */
 
 app.post("/tasks", async (req, res) => {
   try {
     const { title } = req.body;
-    const result = await pool.query(
-      "INSERT INTO tasks (title) VALUES ($1) RETURNING *",
-      [title]
-    );
-    res.json(result.rows[0]);
+
+    if (pool) {
+      const result = await pool.query(
+        "INSERT INTO tasks (title) VALUES ($1) RETURNING *",
+        [title]
+      );
+      return res.json(result.rows[0]);
+    }
+
+    const newTask = { id: id++, title, completed: false };
+    tasks.push(newTask);
+    res.json(newTask);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+/* =========================
+   UPDATE TASK
+========================= */
 
 app.put("/tasks/:id", async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id: taskId } = req.params;
     const { completed } = req.body;
-    const result = await pool.query(
-      "UPDATE tasks SET completed=$1 WHERE id=$2 RETURNING *",
-      [completed, id]
-    );
-    res.json(result.rows[0]);
+
+    if (pool) {
+      const result = await pool.query(
+        "UPDATE tasks SET completed=$1 WHERE id=$2 RETURNING *",
+        [completed, taskId]
+      );
+      return res.json(result.rows[0]);
+    }
+
+    const task = tasks.find((t) => t.id == taskId);
+    if (task) task.completed = completed;
+
+    res.json(task);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+/* =========================
+   DELETE TASK
+========================= */
+
 app.delete("/tasks/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-    await pool.query("DELETE FROM tasks WHERE id=$1", [id]);
+    const { id: taskId } = req.params;
+
+    if (pool) {
+      await pool.query("DELETE FROM tasks WHERE id=$1", [taskId]);
+      return res.sendStatus(204);
+    }
+
+    tasks = tasks.filter((t) => t.id != taskId);
     res.sendStatus(204);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+/* =========================
+   START SERVER
+========================= */
+
 const PORT = process.env.PORT || 5000;
 
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`Backend running on port ${PORT}`);
-  });
-}
+app.listen(PORT, () => {
+  console.log(`🚀 Backend running on port ${PORT}`);
+});
 
 module.exports = app;
