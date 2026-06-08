@@ -294,7 +294,7 @@ You don’t have to do it manually every time the codebase changes.
 
 Jenkins doesn’t handle deployment — it focuses on delivery.
 
-🌐 IP Address vs MAC Address
+IP Address vs MAC Address
 Concept	Description	Analogy
 IP Address	Internet Protocol — digital identity that can change.	Like your home address (changes when you move).
 MAC Address	Media Access Control — unique hardware identifier that never changes.	Like a fingerprint (constant).
@@ -464,8 +464,8 @@ Operating System	Command	Notes
 macOS / Linux	python3 app.py	Uses Python 3 explicitly.
 Windows	python app.py	Works with default Python installation. 
 
-Building and Running a Docker Image
-🧩 Step 1: Create a Dockerfile
+Building and Running a Docker Image.
+Step 1: Create a Dockerfile
 On Mac: use nano Dockerfile
 
 On Windows: use Notepad to create a file named Dockerfile
