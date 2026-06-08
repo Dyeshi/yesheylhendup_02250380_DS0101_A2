@@ -1,0 +1,535 @@
+Container Basics  
+lightweight portable software package which holds application and all its dependencies.
+Provides a consistent, isolated environment for the application to run.
+
+What is the use of docker.
+
+Containerization.  
+process of packaging an application.
+
+Integration in docker.  
+AWS - Amazon Web Server
+Microsoft Azure →
+
+ what is linux.  
+✓ Operating system (like microsoft windows or macOS)
+Gives developer full control through the terminal.
+Docker Notes (14/03/2026)
+Objective: Run a CentOS container using Docker.
+
+Step 1: Access Docker Hub
+Go to Docker Hub.
+
+Search for CentOS.
+
+Select CentOS 7.9.2009.
+
+Step 2: Run CentOS Container
+Open the terminal.
+
+Type:
+
+bash
+docker run centos:7
+Check running containers:
+
+bash
+docker ps
+(Shows container ID, image, command, status, ports, names — if not running, proceed below.)
+
+Step 3: Interactive Mode
+Run interactively:
+
+bash
+docker run -it centos:7 bash
+Inside the container, check release info:
+
+bash
+cat /etc/*release*
+Exit the container:
+
+bash
+exit
+Step 4: Detached Mode
+Check containers again:
+
+bash
+docker ps
+Run container in detached mode for 20 seconds:
+
+bash
+docker run -d centos:7 sleep 20
+(This command runs for 20 seconds and then stops.)
+
+Docker Notes (Continuation)
+Checking Containers
+bash
+docker ps -a
+bash
+docker run -d centos:7
+This container may exit naturally — the computer stops it automatically (“natural death”).
+
+Running a Long Process
+bash
+docker run -d centos:7 sleep 2000
+bash
+docker ps
+(Shows running containers.)
+
+Stopping a Container
+To terminate a running container:
+
+bash
+docker stop <container_name>
+Example:
+
+bash
+docker stop trusting_noether
+After stopping, check:
+
+bash
+docker ps -a
+Status will show “Exited 136” — meaning it stopped before completion.
+
+Deleting Containers
+Delete by ID:
+
+bash
+docker rm <container_id>
+Example:
+
+bash
+docker rm 518...
+Delete by Name:
+
+bash
+docker rm <container_name>
+Example:
+
+bash
+docker rm zen_habit
+
+Removing Containers
+Check all containers:
+
+bash
+docker ps -a
+File is deleted — out of 6 files, only 5 remain.
+
+Removing Multiple Containers
+Sometimes we need to remove a large number of containers, and doing it one by one takes time.
+You can remove several at once using partial IDs:
+
+bash
+docker rm <first_3_letters_of_ID>
+Example:
+
+bash
+docker rm acd pna dad
+Outcome: these three containers will be deleted.
+
+Verify Deletion
+Check again:
+
+bash
+docker ps -a
+Checking Images
+To see or verify if you have images:
+bash
+docker image
+
+Docker Lesson (27/03/2026)
+Pulling and Running an Image
+Pull the Hello-world image:
+
+bash
+docker pull hello-world
+(This downloads the image from Docker Hub.)
+Run the image:
+bash
+docker run hello-world
+(This executes the pulled image.)
+
+Checking Images
+List all available images:
+
+bash
+docker images
+Removing an Image
+To remove an image:
+bash
+docker rmi <image_name>
+(Example: docker rmi hello-world)
+
+Note:  
+You can’t remove the image if it’s still being used by a container.
+First, you need to delete the container that’s using it.
+
+Command Prompts
+Checking Containers
+bash
+docker ps -a
+Lists all containers (active and inactive) and helps get the container ID.
+
+Executing Commands Inside a Container
+bash
+docker exec <container_ID> cat /etc/os-release
+Used to get information from a container without directly entering it.  
+Works only with active containers.
+
+Additional Notes
+You can also check if the container is running before executing commands.
+
+Example command to view OS details inside a container:
+bash
+cat /etc/os-release
+Docker Version
+bash
+docker --version
+Displays the installed Docker version.
+
+Running Containers in Detached Mode
+bash
+docker run -d <container_ID>
+or
+
+bash
+docker run -d <container_name>
+Runs the container in the background (detached mode).
+
+Stopping a Container
+bash
+docker stop redis
+Stops the container named “redis”.
+
+***
+Docker Notes (3/4/2026)
+Viewing Detailed Container Information
+To get everything in detail (including “info junk”):
+
+bash
+docker ps -la
+Displays detailed information about all containers.
+
+Managing Terminals
+To exit a running container:
+Ctrl + C
+
+To open a duplicate terminal/host:
+Command + T
+
+Container Identification
+CID → Container ID in Docker.
+
+Task: Create a Timer
+Goal: Display the current date and time, updating every second.
+
+Command:
+
+bash
+docker run -it ubuntu bash -c "while true; do date; sleep 1; done"
+Explanation:
+
+docker run -it ubuntu bash -c → Runs an interactive Ubuntu container.
+
+while true → Keeps the loop running forever.
+
+date → Displays the current date and time.
+
+sleep 1 → Waits one second before repeating.
+
+The output updates every second continuously.
+
+Docker Notes — Alpine Linux
+Overview
+Alpine → A small, lightweight Linux distribution often used in Docker containers.
+
+sh -c → Runs a shell command or script inside the terminal.
+
+While loop → Used to run commands continuously (forever).
+
+Key Concepts
+Fractional / Run time / Compile time → Different stages of program execution and building.
+(Run time: when the program executes; Compile time: when the code is translated into machine code.)
+
+Checking Alpine Version
+Go to Docker Hub and check the version of Alpine.
+
+Pull the Alpine image:
+bash
+docker pull alpine
+Check Docker version:
+bash
+docker --version
+(Used to verify Docker installation and version.)
+
+Modes of Operation
+Mode	Description
+Detached mode	Runs the container in the background.
+Attached mode	Runs the container in the foreground (you cannot use the terminal freely).
+
+Docker Notes — Attached & Detached Mode
+Steps Demonstrated
+Run a container in detached mode:
+bash
+docker run -d alpine sleep 1000
+Check containers:
+bash
+docker ps -a
+Open a new terminal.
+
+Stop the container:
+bash
+docker stop Obd08398Fbbd
+Explanation
+When you stop the container from another terminal, the original terminal shows that the container has stopped.
+
+This demonstrates the difference between attached and detached modes:
+Detached mode → Container runs in the background.
+Attached mode → Container runs in the foreground (you interact directly with it).
+
+Jenkins Overview
+Jenkins is a tool that automatically builds, tests, and delivers your code.
+You don’t have to do it manually every time the codebase changes.
+
+Jenkins doesn’t handle deployment — it focuses on delivery.
+
+🌐 IP Address vs MAC Address
+Concept	Description	Analogy
+IP Address	Internet Protocol — digital identity that can change.	Like your home address (changes when you move).
+MAC Address	Media Access Control — unique hardware identifier that never changes.	Like a fingerprint (constant).
+
+
+Gateway → The route connecting your local network to external networks.
+
+Building a Jenkins Container in Docker
+
+Run Jenkins container:
+
+bash
+docker run jenkins/jenkins:latest
+Verify successful setup:
+
+Open Docker Desktop → check if Jenkins appears under containers.
+
+Jenkins server runs on Port 8080.
+
+Inspect container details:
+
+bash
+docker inspect <container_ID>
+IP Address: 172.17.0.2
+
+Gateway: 172.17.0.1
+
+Installing Flask
+Steps to create and set up a Flask app:
+
+bash
+mkdir my_flask_app
+cd my_flask_app
+py -m venv venv
+venv\Scripts\activate
+pip install flask
+
+Daily Learning Tasks
+Learn four Linux commands every day.
+Study Git and GitHub — including GitHub Actions.
+
+Data Persistence
+Definition:  
+Refers to the practice of storing data in a non‑volatile storage medium — meaning the data remains intact and accessible even after:
+
+An application is closed
+
+A computer is turned off
+
+Or a system fails
+
+Volatile vs Non‑Volatile Storage
+Type	Description	Example
+Volatile	Temporary storage that loses data when power is off	RAM (Random Access Memory)
+Non‑Volatile	Permanent storage that retains data even after shutdown	Hard drive, SSD
+
+
+Key Concepts
+RAM → Temporary, volatile memory.
+
+Data persistence ensures data moves from temporary (RAM) to non‑volatile storage for long‑term retention.
+
+SSD (Solid‑State Drive) → Used to make data persistent.
+
+Data Persistence and Docker Volumes
+Concept Recap
+Data stored in volatile memory (RAM) is lost when power is off.
+
+Persistent data remains until explicitly deleted or cleared.
+
+To make Docker container configurations persistent, we store data locally.
+
+Setting Up Persistent Jenkins Data
+Step 1: Create a Local Directory
+Create a directory on your computer/laptop to store Jenkins data:
+
+bash
+mkdir my-jenkins-data
+(You can name it anything, e.g., my-bank-data.)
+
+Step 2: Run Jenkins Container with Volume Mapping
+Run Jenkins and link the local directory to the container:
+
+bash
+docker run -p 8080:8080 -v my-jenkins-data:/var/jenkins_home 
+
+Pip — Python Package Manager
+Definition:  
+Pip is a package manager for Python, a tool that manages and installs extra Python code (libraries and packages).
+It’s like a Python app store — you use it to download and manage Python modules.
+
+Pip Tasks
+Installs Python libraries and packages.
+
+The name “Pip” stands for “Pip Installs Packages.”
+
+It’s a tool inside a package — used to add functionality to Python projects.
+
+Installing Flask
+To install Flask using Pip:
+
+bash
+python3 -m pip install flask
+Explanation:
+
+The -m flag tells Python to run a module as a program.
+
+Instead of running a file, Python finds the module (pip) and executes it directly.
+
+This command installs Flask globally or in your virtual environment.
+
+How to Build a Docker Image (By Yourself)
+Steps Overview
+Create a file — this will serve as the foundation for your Docker image.
+
+Start a web server — to host or deploy that local file.
+
+Create a directory for your project:
+
+bash
+mkdir myapp
+(This command makes a new folder named myapp on your computer.)
+
+Understanding Command Structure
+Every command has three parts:
+
+Part	Description	Example
+Command	The main action you want to perform	mkdir
+Flag	Extra instruction that modifies the command’s behavior	-p (creates parent directories if needed)
+Argument	The target or item the command acts on	myapp
+
+
+So, the full command:
+
+bash
+mkdir -p myapp
+means “create a directory named myapp, including any missing parent folders.”
+
+Flags Explained
+A flag is an additional option that changes how a command works.
+
+It’s like a special setting that tells the command to perform a specific action.
+
+Example:
+
+bash
+mkdir -p myapp
+Here, -p ensures the command doesn’t fail if parent directories don’t exist.
+
+Running a Python App
+Step 1: Create a Directory
+To create a new folder for your app:
+
+bash
+mkdir -p ~/myapp
+This command creates a directory named myapp.
+
+Step 2: Navigate Inside the Directory
+Move into the newly created folder:
+
+bash
+cd ~/myapp
+Step 3: Run the Python File
+Run your Python application depending on your operating system:
+
+Operating System	Command	Notes
+macOS / Linux	python3 app.py	Uses Python 3 explicitly.
+Windows	python app.py	Works with default Python installation. 
+
+Building and Running a Docker Image
+🧩 Step 1: Create a Dockerfile
+On Mac: use nano Dockerfile
+
+On Windows: use Notepad to create a file named Dockerfile
+
+This file defines how your Docker image will be built.
+
+Step 2: Build the Docker Image
+Run the following command:
+
+bash
+docker build -t flaskapp .
+Explanation:
+
+docker build → Command used to build Docker images.
+
+-t flaskapp → Tags the image with the name flaskapp.
+
+→ Refers to the current directory (where the Dockerfile is located).
+
+This is the correct command to build your image.
+
+Step 3: Run the Docker Container
+After building, run your container:
+
+bash
+docker run -p 8080:9090 flaskapp
+Explanation:
+
+-p 8080:9090 → Maps host port 8080 to container port 9090.
+
+flaskapp → The name of the image you just built.
+
+This command starts the container and runs your Flask app.
+
+Form (Foundation)
+dockerfile
+FROM <base‑image>
+Defines the base image — the starting layer for your Docker image.
+Examples: python:3.10, node:18, nginx, ubuntu, alpine.
+
+2.Working Directory
+dockerfile
+WORKDIR <app‑directory>
+Sets the directory inside the container where commands will run.
+
+3.Copy Files
+dockerfile
+COPY <source> <destination>
+Copies files from your local system into the container.
+
+4.Run Dependencies
+dockerfile
+RUN <install‑dependencies>
+Installs required packages or dependencies.
+
+5.Expose Port
+dockerfile
+EXPOSE <port>
+Specifies which port the container listens on.
+
+6.Command to Run
+dockerfile
+CMD ["run", "app"]
+Defines the command that starts your application when the container launches.
+
+Note:  
+The base image acts as the foundation layer — the prebuilt environment your Dockerfile builds upon.
